@@ -140,6 +140,37 @@ def hf_dataset(
     ds.set_transform(pre_process)
     return ds
 
+def hf_dataset_from_local(
+    name,
+    data_dir,
+    image_transforms=[],
+    image_column="image",
+    text_column="text",
+    split='train',
+    image_key='image',
+    caption_key='txt',
+    ):
+    """
+    Helper function that allows creating Hugging Face dataset from local files
+    """
+    ds = load_dataset(name, data_dir=data_dir, split=split)
+    image_transforms = [instantiate_from_config(tt) for tt in image_transforms]
+    image_transforms.extend([transforms.ToTensor(),
+                                transforms.Lambda(lambda x: rearrange(x * 2. - 1., 'c h w -> h w c'))])
+    tform = transforms.Compose(image_transforms)
+
+    assert image_column in ds.column_names, f"Didn't find column {image_column} in {ds.column_names}"
+    assert text_column in ds.column_names, f"Didn't find column {text_column} in {ds.column_names}"
+
+    def pre_process(examples):
+        processed = {}
+        processed[image_key] = [tform(im) for im in examples[image_column]]
+        processed[caption_key] = examples[text_column]
+        return processed
+
+    ds.set_transform(pre_process)
+    return ds
+
 class TextOnly(Dataset):
     def __init__(self, captions, output_size, image_key="image", caption_key="txt", n_gpus=1):
         """Returns only captions with dummy images"""
