@@ -21,6 +21,11 @@ fire==0.4.0
 gradio==3.1.4
 diffusers==0.3.0
 datasets[vision]==2.4.0
+pandas==1.5.1
+cairocffi==1.4.0
+CairoSVG==2.5.2
+opencv-python==4.5.5.64
+Pillow==9.2.0
 -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
 -e git+https://github.com/openai/CLIP.git@main#egg=clip
 -e .
