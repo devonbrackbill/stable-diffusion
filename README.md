@@ -9,6 +9,9 @@ Currently it adds:
 - [Image variations](#image-variations)
 - [Conversion to Huggingface Diffusers](scripts/convert_sd_to_diffusers.py)
 
+## Experiments
+1. see the experiments.md file for details
+
 ## Fine tuning
 
 Makes it easy to fine tune Stable Diffusion on your own dataset. For example generating new Pokemon from text!
@@ -56,3 +59,4 @@ Then you should see this:
 [![](assets/gradio_variations.jpeg)](https://twitter.com/Buntworthy/status/1565704770056294400)
 
 Trained by [Justin Pinkney](https://www.justinpinkney.com) ([@Buntworthy](https://twitter.com/Buntworthy)) at [Lambda](https://lambdalabs.com/)
+
