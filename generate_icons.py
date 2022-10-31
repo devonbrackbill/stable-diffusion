@@ -315,12 +315,12 @@ for model in sorted(models.keys()):
 
         subprocess.call([
             "python", "scripts/txt2img.py",
-            '--prompt', '"{}"'.format(prompt),
-            '--outdir', '"outputs/{}"'.format(model),
+            '--prompt', '{}'.format(prompt),
+            '--outdir', 'outputs/{}'.format(model),
             "--H", "512",  "--W", "512",
             "--n_samples", "50",
-            '--config', '"configs/stable-diffusion/retrain-icons.yaml"'.format(),
-            '--ckpt', '"{}/{}"'.format(
+            '--config', 'configs/stable-diffusion/retrain-icons.yaml'.format(),
+            '--ckpt', '{}/{}'.format(
                 model,
                 models[model]['s3_location'].split('/')[5])])
         print('generated images for {}'.format(model))
