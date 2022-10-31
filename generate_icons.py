@@ -7,6 +7,7 @@ import pandas as pd
 import json
 import cv2
 from PIL import Image
+import argparse
 
 # pip install requirements, etc
 #subprocess.call(['git', 'clone', 'https://github.com/devonbrackbill/stable-diffusion.git'])
@@ -18,6 +19,12 @@ from PIL import Image
 # subprocess.call(['pip', 'install', 'cairosvg', 'pandas'])
 
 # imports
+
+
+# add command line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('--n_samples', type=int, default=1, help='number of samples to generate')
+args = parser.parse_args()
 
 
 # download FA images and parse to get the list of icon labels
@@ -318,7 +325,7 @@ for model in sorted(models.keys()):
             '--prompt', '{}'.format(prompt),
             '--outdir', 'outputs/{}'.format(model),
             "--H", "512",  "--W", "512",
-            "--n_samples", "20",
+            "--n_samples", "{}".format(args.n_samples),
             '--config', 'configs/stable-diffusion/retrain-icons.yaml'.format(),
             '--ckpt', '{}/{}'.format(
                 model,
@@ -327,7 +334,7 @@ for model in sorted(models.keys()):
 
     # copy the images to S3
     subprocess.call(
-        ['aws', 's3', 'cp', 'outputs/{}'.format(model), 
+        ['aws', 's3', 'cp', 'outputs/{}'.format(model),
          's3://379552636459-stable-diffusion/experiment4/outputs/{}'.
             format(model),
          '--recursive'])
