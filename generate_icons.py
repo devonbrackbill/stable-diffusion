@@ -8,6 +8,7 @@ import json
 import cv2
 from PIL import Image
 import argparse
+import random
 
 # pip install requirements, etc
 #subprocess.call(['git', 'clone', 'https://github.com/devonbrackbill/stable-diffusion.git'])
@@ -298,9 +299,13 @@ for model in sorted(models.keys()):
         print('no s3_location for {} or {} already exists'.format(model, model))
         pass
 
+# create a prompt list
+random.seed(42)
 prompts_master_list = filenames_df['text'].tolist()
-prompts_master_list = prompts_master_list[:2]
-prompts_master_list = ['darth vader']
+prompts_master_list = random.sample(prompts_master_list, 100)
+prompts_master_list = prompts_master_list + \
+    ['darth vader', 'yoda', 'coffee', 'bunny rabbit', 'radar', 'palm tree',
+     'evergreen tree', 'toucan', 'thumbs up', 'butterfly']
 
 # loop through the list of models
 for model in sorted(models.keys()):
@@ -318,7 +323,7 @@ for model in sorted(models.keys()):
             print('no querytype for {}'.format(model))
             pass
 
-        for seed in [42]:
+        for seed in [42, 43, 44, 45, 46]:
 
             subprocess.call([
                 "python", "scripts/txt2img.py",
