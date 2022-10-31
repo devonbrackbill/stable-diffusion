@@ -318,7 +318,7 @@ for model in sorted(models.keys()):
             '--prompt', '{}'.format(prompt),
             '--outdir', 'outputs/{}'.format(model),
             "--H", "512",  "--W", "512",
-            "--n_samples", "50",
+            "--n_samples", "1",
             '--config', 'configs/stable-diffusion/retrain-icons.yaml'.format(),
             '--ckpt', '{}/{}'.format(
                 model,
