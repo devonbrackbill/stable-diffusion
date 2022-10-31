@@ -276,15 +276,25 @@ for model in sorted(models.keys()):
     except OSError:
         print("{} already exists".format(model))
 
-    if models[model]['s3_location'] is not None:
+    try:
+        os.mkdirs('outputs/' + model)
+        print('created /outputs/{} directory'.format(model))
+    except OSError:
+        print("outputs/{} already exists".format(model))
+        pass
+
+    if models[model]['s3_location'] is not None and os.path.exists(model) is False:
         subprocess.call(['aws', 's3', 'cp', models[model]['s3_location'], model])
         print('downloaded {} to {}'.format(models[model]['s3_location'], model))
     else:
-        print('no s3_location for {}'.format(model))  # no s3_location for model0_evalspecificquery
+        print('no s3_location for {} or {} already exists'.format(model, model))
         pass
 
 prompts_master_list = filenames_df['text'].tolist()
 prompts_master_list = prompts_master_list[:2]
+prompts_master_list = ['darth vader', 'evergreen tree', 'coffee', 'butterfly',
+                       'radar', 'bunny rabbit', 'Yoda', 'palm tree',
+                       'thumbs up', 'toucan']
 
 # loop through the list of models
 for model in sorted(models.keys()):
@@ -304,15 +314,20 @@ for model in sorted(models.keys()):
 
         subprocess.call([
             "python", "scripts/txt2img.py",
-            "--prompt '{}'".format(prompt),
-            "--outdir 'outputs/{}'".format(model),
+            '--prompt "{}"'.format(prompt),
+            '--outdir "outputs/{}"'.format(model),
             "--H 512",  "--W 512",
             "--n_samples 50",
-            "--config 'configs/stable-diffusion/retrain-icons.yaml'".format(),
-            "--ckpt '{}/checkpoints/{}'".format(
+            '--config "configs/stable-diffusion/retrain-icons.yaml"'.format(),
+            '--ckpt "{}/checkpoints/{}"'.format(
                 models[model]['s3_location'].split('/')[3],
                 models[model]['s3_location'].split('/')[5])])
         print('generated images for {}'.format(model))
 
     # copy the images to S3
-    subprocess.call(['aws', 's3', 'cp', 'outputs/{}'.format(model), 's3://379552636459-stable-diffusion/experiment4/outputs/{}'.format(model), '--recursive'])
+    subprocess.call(
+        ['aws', 's3', 'cp', 'outputs/{}'.format(model), 
+         's3://379552636459-stable-diffusion/experiment4/outputs/{}'.
+            format(model),
+         '--recursive'])
+    print('copied images to S3 for {}'.format(model))
