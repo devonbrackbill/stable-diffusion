@@ -24,9 +24,14 @@ import random
 
 # add command line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--n_samples', type=int, default=2, help='number of samples to generate')
+parser.add_argument('--n_samples', type=int, default=2,
+                    help='number of samples to generate')
 args = parser.parse_args()
 
+EXPERIMENT = 'experiment5'
+
+print('generating', args.n_samples, 'samples for Experiment: {}'.
+      format(EXPERIMENT))
 
 # download FA images and parse to get the list of icon labels
 # (we will use these for evaluation the models)
@@ -251,7 +256,7 @@ lightning:
               'postfix': ', fontawesome, nounproject'})
 
 with open('configs/stable-diffusion/retrain-icons.yaml', 'w') as f:
-  f.write(yaml)
+    f.write(yaml)
 
 # setup the directories, one for each model
 models = {
@@ -315,6 +320,9 @@ for model in sorted(models.keys()):
     # loop through the list of prompts
     for prompt in prompts_master_list:
 
+        # replace spaces with underscores
+        subdir = prompt.replace(' ', '_')
+
         if models[model]['querytype'] == 'specific':
             # specific query
             prompt = "black and white SVG icon of {}, fontawesome, thenounproject".format(prompt)
@@ -329,7 +337,7 @@ for model in sorted(models.keys()):
             subprocess.call([
                 "python", "scripts/txt2img.py",
                 '--prompt', '{}'.format(prompt),
-                '--outdir', 'outputs/{}'.format(model),
+                '--outdir', 'outputs/{}/{}'.format(model, subdir),
                 "--H", "512",  "--W", "512",
                 "--seed", "{}".format(seed),
                 "--n_samples", "{}".format(args.n_samples),
@@ -342,7 +350,7 @@ for model in sorted(models.keys()):
     # copy the images to S3
     subprocess.call(
         ['aws', 's3', 'cp', 'outputs/{}'.format(model),
-         's3://379552636459-stable-diffusion/experiment4/outputs/{}'.
-            format(model),
+         's3://379552636459-stable-diffusion/{}/outputs/{}'.
+            format(EXPERIMENT, model),
          '--recursive'])
     print('copied images to S3 for {}'.format(model))
