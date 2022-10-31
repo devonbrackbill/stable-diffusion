@@ -66,11 +66,12 @@ filenames_png = [file + '.png' for file in filenames]
 
 print('found {} files'.format(len(files)))
 print('Converting SVG to PNG...')
+
 for file, filename in zip(files, filenames):
     cairosvg.svg2png(url=os.path.join(fontawesome_dir, 'svgs', 'solid', file), 
-                     output_width=WIDTH, 
-                     output_height=HEIGHT,
-                     write_to=os.path.join(png_dir, filename + '.png'))
+                    output_width=WIDTH, 
+                    output_height=HEIGHT,
+                    write_to=os.path.join(png_dir, filename + '.png'))
     # read in the image
     img = cv2.imread(os.path.join(png_dir, filename + '.png'), cv2.IMREAD_UNCHANGED)
 
@@ -277,7 +278,7 @@ for model in sorted(models.keys()):
         print("{} already exists".format(model))
 
     try:
-        os.mkdirs('outputs/' + model)
+        os.makedirs('outputs/' + model)
         print('created /outputs/{} directory'.format(model))
     except OSError:
         print("outputs/{} already exists".format(model))
