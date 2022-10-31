@@ -272,14 +272,18 @@ models = {
         {'model_configs': '',
          's3_location': 's3://379552636459-stable-diffusion/2022-10-26T04-04-20_retrain-icons/checkpoints/last.ckpt',
          'querytype': 'specific'},
-    'model3_evalgeneralquery_666': {
-        'model_configs': '',
-        's3_location': 's3://379552636459-stable-diffusion/2022-10-26T15-45-26_retrain-icons/checkpoints/epoch=000666.ckpt',
-        'querytype': 'general'},
-    'model3_evalgeneralquery_last':
+    'model1_evalgeneralquery_last':
         {'model_configs': '',
-         's3_location': 's3://379552636459-stable-diffusion/2022-10-26T15-45-26_retrain-icons/checkpoints/last.ckpt',
+         's3_location': 's3://379552636459-stable-diffusion/2022-10-26T04-04-20_retrain-icons/checkpoints/last.ckpt',
          'querytype': 'general'},
+    # 'model3_evalgeneralquery_666': {
+    #     'model_configs': '',
+    #     's3_location': 's3://379552636459-stable-diffusion/2022-10-26T15-45-26_retrain-icons/checkpoints/epoch=000666.ckpt',
+    #     'querytype': 'general'},
+    # 'model3_evalgeneralquery_last':
+    #     {'model_configs': '',
+    #      's3_location': 's3://379552636459-stable-diffusion/2022-10-26T15-45-26_retrain-icons/checkpoints/last.ckpt',
+    #      'querytype': 'general'},
 }
 
 # download the model checkpoints from S3
@@ -313,12 +317,14 @@ prompts_master_list = prompts_master_list + \
     ['darth vader', 'yoda', 'coffee', 'bunny rabbit', 'radar', 'palm tree',
      'evergreen tree', 'toucan', 'thumbs up', 'butterfly']
 
+base_seeds = [1, 2, 3, 4, 5]
+
 # loop through the list of models
 for model in sorted(models.keys()):
     print('model: {}'.format(model))
 
     # loop through the list of prompts
-    for prompt in prompts_master_list:
+    for idx, prompt in enumerate(prompts_master_list):
 
         # replace spaces with underscores
         subdir = prompt.replace(' ', '_')
@@ -331,8 +337,9 @@ for model in sorted(models.keys()):
         else:
             print('no querytype for {}'.format(model))
             pass
-
-        for seed in [42, 43, 44, 45, 46]:
+        
+        # keep increasing the seed as we move thru the prompts
+        for seed in [idx + i for i in base_seeds]:
 
             subprocess.call([
                 "python", "scripts/txt2img.py",
