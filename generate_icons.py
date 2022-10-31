@@ -24,7 +24,7 @@ import random
 
 # add command line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--n_samples', type=int, default=1, help='number of samples to generate')
+parser.add_argument('--n_samples', type=int, default=2, help='number of samples to generate')
 args = parser.parse_args()
 
 
