@@ -300,9 +300,7 @@ for model in sorted(models.keys()):
 
 prompts_master_list = filenames_df['text'].tolist()
 prompts_master_list = prompts_master_list[:2]
-prompts_master_list = ['darth vader', 'evergreen tree', 'coffee', 'butterfly',
-                       'radar', 'bunny rabbit', 'Yoda', 'palm tree',
-                       'thumbs up', 'toucan']
+prompts_master_list = ['darth vader']
 
 # loop through the list of models
 for model in sorted(models.keys()):
@@ -320,17 +318,20 @@ for model in sorted(models.keys()):
             print('no querytype for {}'.format(model))
             pass
 
-        subprocess.call([
-            "python", "scripts/txt2img.py",
-            '--prompt', '{}'.format(prompt),
-            '--outdir', 'outputs/{}'.format(model),
-            "--H", "512",  "--W", "512",
-            "--n_samples", "{}".format(args.n_samples),
-            '--config', 'configs/stable-diffusion/retrain-icons.yaml'.format(),
-            '--ckpt', '{}/{}'.format(
-                model,
-                models[model]['s3_location'].split('/')[5])])
-        print('generated images for {}'.format(model))
+        for seed in [42]:
+
+            subprocess.call([
+                "python", "scripts/txt2img.py",
+                '--prompt', '{}'.format(prompt),
+                '--outdir', 'outputs/{}'.format(model),
+                "--H", "512",  "--W", "512",
+                "--seed", "{}".format(seed),
+                "--n_samples", "{}".format(args.n_samples),
+                '--config', 'configs/stable-diffusion/retrain-icons.yaml',
+                '--ckpt', '{}/{}'.format(
+                    model,
+                    models[model]['s3_location'].split('/')[5])])
+            print('generated images for {}'.format(model))
 
     # copy the images to S3
     subprocess.call(
