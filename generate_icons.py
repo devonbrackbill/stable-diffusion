@@ -64,6 +64,8 @@ filenames = [file.split('.svg')[0] for file in files]
 textdescrip = [file.replace('-', ' ') for file in filenames]
 filenames_png = [file + '.png' for file in filenames]
 
+print('found {} files'.format(len(files)))
+print('Converting SVG to PNG...')
 for file, filename in zip(files, filenames):
     cairosvg.svg2png(url=os.path.join(fontawesome_dir, 'svgs', 'solid', file), 
                      output_width=WIDTH, 
