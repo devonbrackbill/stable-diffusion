@@ -293,7 +293,7 @@ for model in sorted(models.keys()):
         pass
 
     # if models[model]['s3_location'] is not None and '.cptk' not in os.listdir(model):
-    if '.ckpt' not in os.listdir(model):
+    if '.ckpt' not in os.listdir(model[0]):
         subprocess.call(['aws', 's3', 'cp', models[model]['s3_location'], model])
         print('downloaded {} to {}'.format(models[model]['s3_location'], model))
     else:
