@@ -292,7 +292,8 @@ for model in sorted(models.keys()):
         print("outputs/{} already exists".format(model))
         pass
 
-    if models[model]['s3_location'] is not None and os.path.exists(model) is False:
+    # if models[model]['s3_location'] is not None and '.cptk' not in os.listdir(model):
+    if '.cptk' not in os.listdir(model):
         subprocess.call(['aws', 's3', 'cp', models[model]['s3_location'], model])
         print('downloaded {} to {}'.format(models[model]['s3_location'], model))
     else:

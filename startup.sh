@@ -6,7 +6,7 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 unzip awscliv2.zip
 ./aws/install
 
-git clone https://github.com/devonbrackbill/stable-diffusion.git
+git clone https://github.com/devonbrackbill/stable-diffusion.git -y
 cd stable-diffusion
 pip install -r requirements.txt
 pip install -r requirements2.txt
