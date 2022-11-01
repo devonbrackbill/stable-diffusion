@@ -318,7 +318,7 @@ prompts_master_list = random.sample(prompts_master_list, 100)
 prompts_master_list = prompts_master_list + \
     ['darth vader', 'yoda', 'coffee', 'bunny rabbit', 'radar', 'palm tree',
      'evergreen tree', 'toucan', 'thumbs up', 'butterfly']
-prompts_master_list = ['darth vader', 'rabbit']
+# prompts_master_list = ['darth vader', 'rabbit']
 
 # base_seeds = [1, 2, 3, 4, 5]
 
