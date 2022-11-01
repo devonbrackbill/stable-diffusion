@@ -361,7 +361,7 @@ for model in sorted(models.keys()):
             "--n_samples", "{}".format(args.n_samples),
             '--config', 'configs/stable-diffusion/retrain-icons.yaml',
             '--skip_grid',
-            '--from_file', 'prompts.txt',
+            '--from-file', 'prompts.txt',
             '--ckpt', '{}/{}'.format(
                 model,
                 models[model]['s3_location'].split('/')[5])])
