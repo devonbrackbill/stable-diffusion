@@ -28,7 +28,7 @@ parser.add_argument('--n_samples', type=int, default=2,
                     help='number of samples to generate')
 args = parser.parse_args()
 
-EXPERIMENT = 'experiment5'
+EXPERIMENT = 'experiment6'
 
 print('generating', args.n_samples, 'samples for Experiment: {}'.
       format(EXPERIMENT))
@@ -280,10 +280,10 @@ models = {
     #     'model_configs': '',
     #     's3_location': 's3://379552636459-stable-diffusion/2022-10-26T15-45-26_retrain-icons/checkpoints/epoch=000666.ckpt',
     #     'querytype': 'general'},
-    # 'model3_evalgeneralquery_last':
-    #     {'model_configs': '',
-    #      's3_location': 's3://379552636459-stable-diffusion/2022-10-26T15-45-26_retrain-icons/checkpoints/last.ckpt',
-    #      'querytype': 'general'},
+    'model3_evalgeneralquery_last':
+        {'model_configs': '',
+         's3_location': 's3://379552636459-stable-diffusion/2022-10-26T15-45-26_retrain-icons/checkpoints/last.ckpt',
+         'querytype': 'general'},
 }
 
 # download the model checkpoints from S3
@@ -312,15 +312,17 @@ for model in sorted(models.keys()):
         pass
 
 # create a prompt list
-random.seed(42)
+random.seed(43)
 prompts_master_list = filenames_df['text'].tolist()
 prompts_master_list = random.sample(prompts_master_list, 100)
 prompts_master_list = prompts_master_list + \
     ['darth vader', 'yoda', 'coffee', 'bunny rabbit', 'radar', 'palm tree',
      'evergreen tree', 'toucan', 'thumbs up', 'butterfly']
+prompts_master_list = ['darth vader', 'rabbit']
 
-base_seeds = [1, 2, 3, 4, 5]
+# base_seeds = [1, 2, 3, 4, 5]
 
+seed_start = 43
 
 # loop through the list of models
 for model in sorted(models.keys()):
@@ -348,7 +350,7 @@ for model in sorted(models.keys()):
             f.write("%s\n" % prompt)
 
     # keep increasing the seed as we move thru the prompts
-    for seed in [43]:
+    for seed in [seed_start]:
 
         subprocess.call([
             "python", "scripts/txt2img.py",
@@ -364,11 +366,17 @@ for model in sorted(models.keys()):
                 model,
                 models[model]['s3_location'].split('/')[5])])
         print('generated images for {}'.format(model))
+        # seed_start += 1
 
     # copy the images to S3
     subprocess.call(
         ['aws', 's3', 'cp', 'outputs/{}'.format(model),
          's3://379552636459-stable-diffusion/{}/outputs/{}'.
+            format(EXPERIMENT, model),
+         '--recursive'])
+    subprocess.call(
+        ['aws', 's3', 'cp', 'prompts.txt',
+         's3://379552636459-stable-diffusion/{}/outputs/{}/prompts.txt'.
             format(EXPERIMENT, model),
          '--recursive'])
     print('copied images to S3 for {}'.format(model))
