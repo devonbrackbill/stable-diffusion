@@ -374,9 +374,9 @@ for model in sorted(models.keys()):
          's3://379552636459-stable-diffusion/{}/outputs/{}'.
             format(EXPERIMENT, model),
          '--recursive'])
+    # upload the prompts to S3
     subprocess.call(
         ['aws', 's3', 'cp', 'prompts.txt',
          's3://379552636459-stable-diffusion/{}/outputs/{}/prompts.txt'.
-            format(EXPERIMENT, model),
-         '--recursive'])
+            format('experiment6', 'model3_evalgeneralquery_last')])
     print('copied images to S3 for {}'.format(model))
